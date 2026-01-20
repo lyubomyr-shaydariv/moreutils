@@ -43,7 +43,7 @@
 char *tmpname = NULL;
 
 void usage() {
-	printf("sponge [-a] <file>: soak up all input from stdin and write it "
+	printf("sponge [-a] [-t] <file>: soak up all input from stdin and write it "
 	       "to <file>\n");
 	exit(0);
 }
@@ -285,15 +285,20 @@ int main (int argc, char **argv) {
 	size_t mem_available = default_sponge_size();
 	int tmpfile_used=0;
 	int append=0;
+	int touch_file=0;
 	int opt;
 
-	while ((opt = getopt(argc, argv, "ha")) != -1) {
+	while ((opt = getopt(argc, argv, "hat")) != -1) {
 		switch (opt) {
 			case 'h':
 				usage();
 				break;
 			case 'a':
 				append=1;
+				break;
+			case 't':
+				touch_file=1;
+				break;
 		}
 	}
 	if (optind < argc)
@@ -378,6 +383,15 @@ int main (int argc, char **argv) {
 				exit(1);
 			}
 			copy_tmpfile(tmpfile, outfile, bufstart, bufsize);
+		}
+		if (exists && touch_file) {
+			struct timespec ts[2];
+			ts[0].tv_nsec = UTIME_OMIT; /* No need to set atime. */
+			ts[1].tv_sec = statbuf.st_mtime;
+			if (utimensat(AT_FDCWD, outname, ts, 0)) {
+				perror("error touching timestamp (mtime)");
+				exit(1);
+			}
 		}
 	}
 	else {

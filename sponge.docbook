@@ -48,7 +48,7 @@ USA
 
 	<refsynopsisdiv>
 		<cmdsynopsis>
-			<command>sed '...' file | grep '...' | sponge [-a] file</command>
+			<command>sed '...' file | grep '...' | sponge [-a] [-t] file</command>
 		</cmdsynopsis>
 	</refsynopsisdiv>
 
@@ -98,6 +98,18 @@ USA
 					with the standard input
 					appended to it. This is done
 					atomically when possible.
+				</para>
+			</listitem>
+		</varlistentry>
+
+		<varlistentry>
+			<term><option>-t</option></term>
+			<listitem>
+				<para>
+					Touch the original file
+					timestamps. Currently last
+					modification time (mtime) is
+					only supported.
 				</para>
 			</listitem>
 		</varlistentry>
