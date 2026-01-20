@@ -48,7 +48,7 @@ USA
 
 	<refsynopsisdiv>
 		<cmdsynopsis>
-			<command>sed '...' file | grep '...' | sponge [-a] [-t] file</command>
+			<command>sed '...' file | grep '...' | sponge [-a] [-p] [-t] file</command>
 		</cmdsynopsis>
 	</refsynopsisdiv>
 
@@ -98,6 +98,20 @@ USA
 					with the standard input
 					appended to it. This is done
 					atomically when possible.
+				</para>
+			</listitem>
+		</varlistentry>
+
+		<varlistentry>
+			<term><option>-p</option></term>
+			<listitem>
+				<para>
+					Preserve the original file.
+					This makes <command>sponge</command>
+					always copy content from the
+					temporary file to preserve
+					the original file inode and birth
+					time that cannot be changed.
 				</para>
 			</listitem>
 		</varlistentry>

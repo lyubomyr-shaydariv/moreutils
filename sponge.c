@@ -43,7 +43,7 @@
 char *tmpname = NULL;
 
 void usage() {
-	printf("sponge [-a] [-t] <file>: soak up all input from stdin and write it "
+	printf("sponge [-a] [-p] [-t] <file>: soak up all input from stdin and write it "
 	       "to <file>\n");
 	exit(0);
 }
@@ -285,16 +285,20 @@ int main (int argc, char **argv) {
 	size_t mem_available = default_sponge_size();
 	int tmpfile_used=0;
 	int append=0;
+	int preserve_file=0;
 	int touch_file=0;
 	int opt;
 
-	while ((opt = getopt(argc, argv, "hat")) != -1) {
+	while ((opt = getopt(argc, argv, "hapt")) != -1) {
 		switch (opt) {
 			case 'h':
 				usage();
 				break;
 			case 'a':
 				append=1;
+				break;
+			case 'p':
+				preserve_file=1;
 				break;
 			case 't':
 				touch_file=1;
@@ -371,7 +375,7 @@ int main (int argc, char **argv) {
 
 		/* If it's a regular file, or does not yet exist,
 		 * attempt a fast rename of the temp file. */
-		if ((regfile || ! exists) &&
+		if (! preserve_file && (regfile || ! exists) &&
 		    rename(tmpname, outname) == 0) {
 			tmpname=NULL; /* don't try to cleanup tmpname */
 		}
